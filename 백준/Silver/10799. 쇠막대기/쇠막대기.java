@@ -1,4 +1,3 @@
-
 import java.io.*;
 import java.util.Stack;
 
@@ -16,14 +15,14 @@ public class Main {
         for (int i = 1; i < str.length; i++)
         {
 
-                if (str[i-1].equals("(")&&str[i].equals(")")){
-                    //자르기
+                if (str[i-1].charAt(0)=='('&&str[i].charAt(0)==')'){
+             
                     answer+=in.size();
-                } else if(str[i-1].equals(")")&&str[i].equals(")")){
-                    //막대기 끝
+                } else if(str[i-1].charAt(0)==')'&&str[i].charAt(0)==')'){
+               
                     in.pop();
-                }else if(str[i-1].equals("(")){
-                    //막대 추가
+                }else if(str[i-1].charAt(0)=='('){
+              
                     in.push(1);
                     answer+=1;
                 }
