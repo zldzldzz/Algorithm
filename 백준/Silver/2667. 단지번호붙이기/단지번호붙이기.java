@@ -1,62 +1,73 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        String input = br.readLine();
-        int N = Integer.parseInt(input);
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int[] dx={1, 0, -1, 0};
-        int[] dy={0,-1, 0, 1};
+		int result = 0;
+		List<Integer> houseCount = new LinkedList<>();
 
-        String[][] map = new String[N][N];
-        boolean[][] visited = new boolean[N][N];
+		int n = Integer.parseInt(br.readLine());
 
-        for (int i = 0; i < N; i++) {
-            map[i] = br.readLine().split("");
-        }
+		String[][] map = new String[n][n];
+		boolean[][] visited = new boolean[n][n];
 
-        ArrayList<Integer> list = new ArrayList<>();
+		int[] xd = {1, 0, -1, 0};
+		int[] yd = {0, 1, 0, -1};
 
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
+		for (int i = 0; i < n; i++) {
+			String[] line = br.readLine().split("");
+			map[i] = line;
+		}
 
-                if(map[i][j].equals("1")&&!visited[i][j]) {
-                    Queue<Integer[]> q = new LinkedList<>();
-                    q.add(new Integer[]{i, j});
-                    visited[i][j] = true;
+		Queue<int[]> queue = new LinkedList<>();
 
-                    int count = 1;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (map[i][j].equals("1")) {
+					if (!visited[i][j]) {
+						queue.add(new int[] {i, j});
+						visited[i][j] = true;
+						result++;
+						int house = 1;
+						while (!queue.isEmpty()) {
+							int[] now = queue.poll();
+							for (int k = 0; k < 4; k++) {
+								int x = now[0] + xd[k];
+								int y = now[1] + yd[k];
+								if (x >= 0 && x < n && y >= 0 && y < n) {
+									if (map[x][y].equals("1") && !visited[x][y]) {
+										house++;
+										visited[x][y] = true;
+										queue.add(new int[] {x, y});
+									}
+								}
+							}
+						}
+						houseCount.add(house);
+					}
+				}
+			}
+		}
 
-                    while (!q.isEmpty()) {
-                        Integer[] now = q.poll();
+		Collections.sort(houseCount);
 
-                        for (int k = 0; k < 4; k++) {
-                            if( now[0]+dx[k]>=0 && now[1]+dy[k]>=0 && now[0]+dx[k] <N && now[1]+dy[k]<N ) {
-                                if(map[now[0]+dx[k]][now[1]+dy[k]].equals("1")&&!visited[now[0]+dx[k]][now[1]+dy[k]]){
-                                    q.add(new Integer[]{now[0]+dx[k], now[1]+dy[k]});
-                                    visited[now[0]+dx[k]][now[1]+dy[k]]=true;
-                                    count++;
-                                }
-                            }
-                        }
-                    }
-                    list.add(count);
-                }
-            }
-        }
-
-        Collections.sort(list);;
-
-        bw.write(list.size()+"\n");
-        for (Integer i : list) {
-            bw.write(String.valueOf(i)+"\n");
-        }
-        bw.flush();
-        bw.close();
-        br.close();
-
-    }
+		bw.write(String.valueOf(result)+"\n");
+		for (Integer i : houseCount) {
+			bw.write(String.valueOf(i)+"\n");
+		}
+		bw.flush();
+		bw.close();
+		br.close();
+	}
 }
