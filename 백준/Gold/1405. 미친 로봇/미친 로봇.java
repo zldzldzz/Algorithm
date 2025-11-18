@@ -19,22 +19,28 @@ public class Main {
   public static void dfs(int depth, double percent, int x, int y) {
 
     if (visited[x][y]) {
+      //방문을 했었는지 검토
       return;
     }
 
     if (n == depth) {
+      //이동거리가 목표에 도달하면 퍼센트 측정 (단순 경로 확률 측정)
       sumPercent += percent;
       return;
     }
 
     visited[x][y] = true;
+    
+    //4가지 방향으로 이동
     for (int i = 0; i < 4; i++) {
       int dx = x + directions[i][0];
       int dy = y + directions[i][1];
+      // indexOut을 방지 하기 위한 조건
       if (dx >= 1 && dy >= 1 && dx <= 30 && dy <= 30) {
         dfs(depth + 1, percent * dirPercent[i], dx, dy);
       }
     }
+    // 방문 해제
     visited[x][y] = false;
   }
 
